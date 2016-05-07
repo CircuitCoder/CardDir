@@ -4,6 +4,7 @@ var ACTIVITYSIZE = 24;
 var COLORMAP = {
   DEFAULT: "rgba(0,0,0,.54)",
   ORANGE: "#FF9800",
+  BLUE: "#2196F3",
 }
 
 var mapPrimary; // For left eye and overview
@@ -19,10 +20,15 @@ var activities;
 function initMap() {
   activities =[
     {
-      latlng: new google.maps.LatLng(31.2243708, 121.5050288),
+      latlng: new google.maps.LatLng(31.2201514, 121.5431558),
       color: "ORANGE",
       icon: "local_offer"
-    }
+    },
+    {
+      latlng: new google.maps.LatLng(31.2220727, 121.5417264),
+      color: "BLUE",
+      icon: "local_dining"
+    },
   ];
 
   $(document).ready(function() {
