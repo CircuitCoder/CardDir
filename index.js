@@ -1,83 +1,16 @@
 /* Lock to landscape */
-if(screen.orientation && screen.orientation.lock) {
-  screen.orientation.lock('landscape');
+try {
+  if(screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape');
+  }
+} catch(e) {
+  //Ignore
 }
+
 
 /* Setup sence */
 var primaryScene = new THREE.Scene();
 var secondaryScene = new THREE.Scene();
-
-/* Declare CSS3D Objects */
-var primaryMapObject;
-var secondaryMapObject;
-
-var mapBase = {
-  px: -300,
-  py: -300,
-  pz: 0,
-  rx: CDMath.toRad(-35),
-  ry: CDMath.toRad(25),
-  rz: 0
-}
-
-var mapRestoreBase = $.extend({}, mapBase);
-var mapExpandBase = {
-  px: 0,
-  py: 0,
-  pz: -200,
-  rx: 0,
-  ry: 0,
-  rz: 0,
-}
-
-var mapEasing = bezier(0.17, 0.67, 0.83, 0.67);
-var mapStartTime = -1;
-var mapEaseBase;
-var mapEaseTarget;
-
-function mapRestorePosition() {
-  mapStartTime = performance.now();
-  mapEaseBase = mapBase;
-  mapEaseTarget = mapRestoreBase;
-}
-
-function mapGotoExpandPosition() {
-  mapStartTime = performance.now();
-  mapEaseBase = mapBase;
-  mapEaseTarget = mapExpandBase;
-}
-
-function doMapAnimation(now) {
-  if(mapStartTime == -1 || now - mapStartTime > 5000) return;
-  else {
-    var easeValue = mapEasing((now-mapStartTime) / 5000);
-    mapBase.px = mapEaseBase.px * (1 - easeValue) + mapEaseTarget.px * easeValue;
-    mapBase.py = mapEaseBase.py * (1 - easeValue) + mapEaseTarget.py * easeValue;
-    mapBase.pz = mapEaseBase.pz * (1 - easeValue) + mapEaseTarget.pz * easeValue;
-    mapBase.rx = mapEaseBase.rx * (1 - easeValue) + mapEaseTarget.rx * easeValue;
-    mapBase.ry = mapEaseBase.ry * (1 - easeValue) + mapEaseTarget.ry * easeValue;
-    mapBase.rz = mapEaseBase.rz * (1 - easeValue) + mapEaseTarget.rz * easeValue;
-  }
-}
-
-function applyMap() {
-  //TODO: acceleration
-  primaryMapObject.position.x = mapBase.px;
-  primaryMapObject.position.y = mapBase.py;
-  primaryMapObject.position.z = mapBase.pz;
-  primaryMapObject.rotation.x = mapBase.rx;
-  primaryMapObject.rotation.y = mapBase.ry;
-  primaryMapObject.rotation.z = mapBase.rz;
-
-  secondaryMapObject.position.x = mapBase.px;
-  secondaryMapObject.position.y = mapBase.py;
-  secondaryMapObject.position.z = mapBase.pz;
-  secondaryMapObject.rotation.x = mapBase.rx;
-  secondaryMapObject.rotation.y = mapBase.ry;
-  secondaryMapObject.rotation.z = mapBase.rz;
-}
-
-/* Setup cameras */
 
 // Most cellphone cameras has a FOV of around 50. So 50 is the go
 var cameraOverview = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
@@ -92,24 +25,15 @@ cameraLeft.position.x = -40;
 cameraRight.position.x = 40;
 
 /* Setup renderer */
-var rendererOverview = new THREE.CSS3DRenderer({ alpha: true });
-var rendererLeft = new THREE.CSS3DRenderer({ alpha: true });
-var rendererRight = new THREE.CSS3DRenderer({ alpha: true });
+var rendererOverview = new THREE.WebGLRenderer({ alpha: true });
+var rendererLeft = new THREE.WebGLRenderer({ alpha: true });
+var rendererRight = new THREE.WebGLRenderer({ alpha: true });
 
 rendererOverview.setSize(window.innerWidth, window.innerHeight);
 rendererLeft.setSize(window.innerWidth / 2, window.innerHeight);
 rendererRight.setSize(window.innerWidth / 2, window.innerHeight);
 
 function setupElements() {
-  var primaryMap = document.getElementById("primary-map-mask");
-  var secondaryMap = document.getElementById("secondary-map-mask");
-  
-  primaryMapObject = new THREE.CSS3DObject(primaryMap);
-  secondaryMapObject = new THREE.CSS3DObject(secondaryMap);
-
-  primaryScene.add(primaryMapObject);
-  secondaryScene.add(secondaryMapObject);
-
   $(".frame-container .overview").append(rendererOverview.domElement);
   $(".frame-container .left").append(rendererLeft.domElement);
   $(".frame-container .right").append(rendererRight.domElement);
@@ -127,8 +51,8 @@ function animate(time) {
   //TODO: here
   //
 
-  doMapAnimation(time);
-  applyMap();
+  //doMapAnimation(time);
+  //applyMap();
 
   if(cardboardMode) {
     rendererLeft.render(primaryScene, cameraLeft);
@@ -145,6 +69,10 @@ function switchToCardboard() {
 
   $("#primary-map-mask").removeClass("overview").addClass("half");
   $("#secondary-map-mask").removeClass("hidden").addClass("half");
+  $(".map-mask").removeClass("overview-mode");
+  $(".map-mask").addClass("cardboard-mode");
+  $(".map-icons").removeClass("overview-mode");
+  $(".map-icons").addClass("cardboard-mode");
 
   $(".frame-container").addClass("cardboard");
 }
@@ -154,6 +82,11 @@ function switchToOverview() {
 
   $("#primary-map-mask").addClass("overview").removeClass("half");
   $("#secondary-map-mask").addClass("hidden").removeClass("half");
+
+  $(".map-mask").addClass("overview-mode");
+  $(".map-mask").removeClass("cardboard-mode");
+  $(".map-icons").addClass("overview-mode");
+  $(".map-icons").removeClass("cardboard-mode");
 
   $(".frame-container").removeClass("cardboard");
 }
@@ -235,16 +168,17 @@ $(document).ready(function() {
     updateZoomBtnState();
   })
 
-  var expanded = false;
 
   $("#btn-map").click(function() {
     if(expanded) {
       $(".map-mask").removeClass("expanded");
-      mapRestorePosition();
+      $(".map-icons").removeClass("expanded");
+      retractMap();
       expanded = false;
     } else {
       $(".map-mask").addClass("expanded");
-      mapGotoExpandPosition();
+      $(".map-icons").addClass("expanded");
+      expandMap();
       expanded = true;
     }
   });

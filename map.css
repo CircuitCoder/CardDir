@@ -5,12 +5,13 @@
   overflow: hidden;
   border-radius: 50%;
   transform: translateZ(0);
-  transition: height 0.5s ease, width 0.5s ease;
+  transition: height 0.2s ease, width 0.2s ease, border-radius 0.2s ease, transform 0.2s ease;
 }
 
 .map-mask.expanded {
-  height: 2000px;
-  width: 2000px;
+  height: 100vh;
+  width: 100vw;
+  border-radius: 0;
 }
 
 .map-mask.hidden {
@@ -21,8 +22,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateY(-50%) translateX(-50%);
 }
 
 .overview .map-container {
@@ -33,4 +33,72 @@
 .half .map-container {
   height: 100vh;
   width: 50vw;
+}
+
+.map-mask.overview-mode.overview {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateX(40px) translateY(-40px);
+}
+
+.map-mask.overview-mode.overview.expanded {
+  transform: translateX(0) translateY(0);
+}
+
+.map-icons.overview {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  height: 100vh;
+  width: 100vw;
+
+  transition: transform 0.2s ease;
+  transform: translateX(165px) translateY(-165px);
+
+  overflow: visible;
+}
+
+.map-icons.overview.expanded {
+  transform: translate(50%) translateY(-50%);
+}
+
+.map-activity {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transition: transform 0.05s ease-in-out;
+  height: 24px;
+  line-height: 24px;
+
+}
+
+.map-activity .material-icons:not(.lockgrid) {
+  text-shadow: rgba(0,0,0,.12) 0 4px 6px;
+}
+
+.map-activity .material-icons {
+  color: inherit;
+}
+
+.map-navigation-mark {
+  transform: translate(-12px, 12px);
+}
+
+.map-activity .lockgrid {
+  position: absolute;
+  transform: scale(3);
+  top: 0;
+  left: 0;
+  bottom; 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+.map-activity.locked .lockgrid {
+  transform: scale(2.5);
+  opacity: 0.7;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }

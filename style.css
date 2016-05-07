@@ -3,6 +3,8 @@ body {
   padding: 0;
 
   overflow: hidden;
+
+  background: rgba(0,0,0,.12);
 }
 
 .frame-container {
@@ -136,6 +138,9 @@ body {
 
   opacity: 0;
   transform: translateY(10000px);
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .help-overlap.shown {
@@ -147,16 +152,18 @@ body {
 
 .help-card-wrapper {
   position: absolute;
-  top: 50%;
   left: 0;
   right: 0;
-  transform: translateY(-50%);
+  min-height: 100%;
+  padding: 10vh 0;
 }
 
 .mdl-card.help-card {
   max-width: 400px;
   width: auto;
   margin: 0 auto;
+  height: auto;
+  padding-bottom: 40px;
 }
 
 /* Material icons */

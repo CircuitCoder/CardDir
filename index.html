@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"
     <title>CardDir</title>
 
     <script src="jquery.min.js"></script>
@@ -27,6 +28,24 @@
       <div class="right">
       </div>
       <div class="overview">
+      </div>
+    </div>
+
+    <div class="map-mask overview" id="primary-map-mask">
+      <div class="map-positioner">
+        <div class="map-container" id="primary-map"></div>
+      </div>
+    </div>
+
+    <div class="map-icons overview" id="primary-map-icons">
+      <div class="map-navigation-mark map-activity">
+        <i class="material-icons">navigation</i>
+      </div>
+    </div>
+
+    <div class="map-mask hidden" id="secondary-map-mask">
+      <div class="map-positioner">
+        <div class="map-container" id="secondary-map"></div>
       </div>
     </div>
 
@@ -62,17 +81,6 @@
       </div>
     </div>
 
-    <div class="map-mask overview mdl-shadow--2dp" id="primary-map-mask">
-      <div class="map-positioner">
-        <div class="map-container" id="primary-map"></div>
-      </div>
-    </div>
-
-    <div class="map-mask hidden mdl-shadow--2dp" id="secondary-map-mask">
-      <div class="map-positioner">
-        <div class="map-container" id="secondary-map"></div>
-      </div>
-    </div>
 
     <div class="controls mdl-shadow--2dp">
       <button class="control mdl-js-button mdl-js-ripple-effect" id="btn-toggle-mode">
